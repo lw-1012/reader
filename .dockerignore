@@ -1,0 +1,11 @@
+**/node_modules
+**/data
+**/dist
+backend/webui/*
+!backend/webui/.gitkeep
+.git
+.idea
+.vscode
+*.log
+sample
+the_evolution_of_desire_structured.json

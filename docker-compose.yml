@@ -1,0 +1,21 @@
+services:
+  reader:
+    build: .
+    image: reader:latest
+    container_name: reader
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      READER_PASSWORD: ${READER_PASSWORD:-reader}
+      READER_ADDR: ":8080"
+      READER_DATA_DIR: "/data"
+    volumes:
+      - reader_data:/data
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+
+volumes:
+  reader_data:

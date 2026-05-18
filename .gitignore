@@ -1,0 +1,11 @@
+node_modules/
+backend/webui/*
+!backend/webui/.gitkeep
+data/
+*.exe
+*.log
+.DS_Store
+.idea/
+.vscode/
+the_evolution_of_desire_structured.json
+.env
