@@ -16,6 +16,10 @@ type Settings struct {
 	SimplifyPrompt string `json:"simplify_prompt"`
 	AnalyzePrompt  string `json:"analyze_prompt"`
 	TTSInstruction string `json:"tts_instruction"`
+	// Reasoning effort per task: "" = model default (omit field),
+	// otherwise one of: none/minimal/low/medium/high/xhigh.
+	SimplifyReasoning string `json:"simplify_reasoning"`
+	AnalyzeReasoning  string `json:"analyze_reasoning"`
 }
 
 const DefaultSimplifyPrompt = `You are an English text simplifier specialized in adapting literature for second-language learners.
@@ -60,6 +64,10 @@ func defaultSettings() Settings {
 		SimplifyPrompt: DefaultSimplifyPrompt,
 		AnalyzePrompt:  DefaultAnalyzePrompt,
 		TTSInstruction: DefaultTTSInstruction,
+		// keep simplification cheap by default; analysis benefits from
+		// light reasoning so default it to "low".
+		SimplifyReasoning: "",
+		AnalyzeReasoning:  "low",
 	}
 }
 
@@ -112,8 +120,10 @@ func (s Settings) Public() map[string]any {
 		"tts_model":       s.TTSModel,
 		"voice":           s.Voice,
 		"level":           s.Level,
-		"simplify_prompt": s.SimplifyPrompt,
-		"analyze_prompt":  s.AnalyzePrompt,
-		"tts_instruction": s.TTSInstruction,
+		"simplify_prompt":    s.SimplifyPrompt,
+		"analyze_prompt":     s.AnalyzePrompt,
+		"tts_instruction":    s.TTSInstruction,
+		"simplify_reasoning": s.SimplifyReasoning,
+		"analyze_reasoning":  s.AnalyzeReasoning,
 	}
 }

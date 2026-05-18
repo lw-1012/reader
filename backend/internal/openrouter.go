@@ -25,11 +25,16 @@ type chatMessage struct {
 	Content string `json:"content"`
 }
 
+type reasoningCfg struct {
+	Effort string `json:"effort,omitempty"`
+}
+
 type chatRequest struct {
 	Model          string         `json:"model"`
 	Messages       []chatMessage  `json:"messages"`
 	ResponseFormat map[string]any `json:"response_format,omitempty"`
 	Temperature    float64        `json:"temperature,omitempty"`
+	Reasoning      *reasoningCfg  `json:"reasoning,omitempty"`
 	Stream         bool           `json:"stream"`
 }
 
@@ -42,7 +47,10 @@ type chatResponse struct {
 	} `json:"error,omitempty"`
 }
 
-func (c *ORClient) Chat(ctx context.Context, s Settings, model, prompt string) (string, error) {
+// Chat calls the chat-completions endpoint. effort is an OpenRouter
+// reasoning level ("minimal"/"low"/"medium"/"high"/"xhigh"/"none"); empty
+// string means "don't send a reasoning field" (use the model default).
+func (c *ORClient) Chat(ctx context.Context, s Settings, model, prompt, effort string) (string, error) {
 	if s.APIKey == "" {
 		return "", errors.New("api key not configured")
 	}
@@ -52,6 +60,9 @@ func (c *ORClient) Chat(ctx context.Context, s Settings, model, prompt string) (
 		ResponseFormat: map[string]any{"type": "json_object"},
 		Temperature:    0.3,
 		Stream:         false,
+	}
+	if effort != "" {
+		body.Reasoning = &reasoningCfg{Effort: effort}
 	}
 	buf, _ := json.Marshal(body)
 	url := strings.TrimRight(s.BaseURL, "/") + "/chat/completions"

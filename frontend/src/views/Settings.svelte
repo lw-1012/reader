@@ -83,6 +83,33 @@
           </div>
         </div>
 
+        <h3>推理强度</h3>
+        <p class="muted small">OpenRouter 跨厂商归一化；模型不支持某档会自动映射到最近档。「默认」= 不下发该字段，由模型自行决定。</p>
+        <div class="field">
+          <label>简化任务</label>
+          <select bind:value={s.simplify_reasoning}>
+            <option value="">默认</option>
+            <option value="none">none（强制关）</option>
+            <option value="minimal">minimal</option>
+            <option value="low">low</option>
+            <option value="medium">medium</option>
+            <option value="high">high</option>
+            <option value="xhigh">xhigh</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>逐句分析任务</label>
+          <select bind:value={s.analyze_reasoning}>
+            <option value="">默认</option>
+            <option value="none">none（强制关）</option>
+            <option value="minimal">minimal</option>
+            <option value="low">low</option>
+            <option value="medium">medium</option>
+            <option value="high">high</option>
+            <option value="xhigh">xhigh</option>
+          </select>
+        </div>
+
         <h3>默认难度</h3>
         <div class="field">
           <label>CEFR Level</label>

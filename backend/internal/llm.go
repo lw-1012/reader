@@ -70,7 +70,7 @@ func Simplify(db *sql.DB, or *ORClient, w http.ResponseWriter, r *http.Request) 
 	prompt := ApplyPrompt(settings.SimplifyPrompt, level, orig) + "\n\nParagraph:\n" + orig
 	ctx, cancel := context.WithTimeout(r.Context(), 90*time.Second)
 	defer cancel()
-	content, err := or.Chat(ctx, settings, settings.SimplifyModel, prompt)
+	content, err := or.Chat(ctx, settings, settings.SimplifyModel, prompt, settings.SimplifyReasoning)
 	if err != nil {
 		http.Error(w, err.Error(), 502)
 		return
@@ -132,7 +132,7 @@ func Analyze(db *sql.DB, or *ORClient, w http.ResponseWriter, r *http.Request) {
 	prompt := ApplyPrompt(settings.AnalyzePrompt, level, body.Text)
 	ctx, cancel := context.WithTimeout(r.Context(), 60*time.Second)
 	defer cancel()
-	content, err := or.Chat(ctx, settings, settings.AnalyzeModel, prompt)
+	content, err := or.Chat(ctx, settings, settings.AnalyzeModel, prompt, settings.AnalyzeReasoning)
 	if err != nil {
 		http.Error(w, err.Error(), 502)
 		return

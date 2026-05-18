@@ -89,6 +89,12 @@ func main() {
 		if v, ok := patch["tts_instruction"].(string); ok {
 			cur.TTSInstruction = v
 		}
+		if v, ok := patch["simplify_reasoning"].(string); ok {
+			cur.SimplifyReasoning = v
+		}
+		if v, ok := patch["analyze_reasoning"].(string); ok {
+			cur.AnalyzeReasoning = v
+		}
 		if err := internal.SaveSettings(db, cur); err != nil {
 			http.Error(w, err.Error(), 500)
 			return
