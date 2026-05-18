@@ -95,6 +95,9 @@ func main() {
 		if v, ok := patch["analyze_reasoning"].(string); ok {
 			cur.AnalyzeReasoning = v
 		}
+		if v, ok := patch["provider_only"].(string); ok {
+			cur.ProviderOnly = v
+		}
 		if err := internal.SaveSettings(db, cur); err != nil {
 			http.Error(w, err.Error(), 500)
 			return

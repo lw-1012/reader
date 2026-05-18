@@ -110,6 +110,13 @@
           </select>
         </div>
 
+        <h3>提供商限制</h3>
+        <p class="muted small">只对「简化 / 逐句分析」生效，TTS 不受影响。留空 = 不限制（OpenRouter 默认路由）。多个用逗号分隔，按 OpenRouter 的 provider slug，如 <code>openai</code>、<code>anthropic</code>、<code>google-vertex</code>、<code>deepinfra</code>。</p>
+        <div class="field">
+          <label>provider only</label>
+          <input bind:value={s.provider_only} placeholder="例：openai, anthropic（留空不限制）" />
+        </div>
+
         <h3>默认难度</h3>
         <div class="field">
           <label>CEFR Level</label>

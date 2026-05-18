@@ -20,6 +20,10 @@ type Settings struct {
 	// otherwise one of: none/minimal/low/medium/high/xhigh.
 	SimplifyReasoning string `json:"simplify_reasoning"`
 	AnalyzeReasoning  string `json:"analyze_reasoning"`
+	// ProviderOnly restricts which OpenRouter providers may serve the
+	// simplify/analyze chat calls. Comma/space separated provider slugs
+	// (e.g. "openai, anthropic"). Empty = no restriction. TTS unaffected.
+	ProviderOnly string `json:"provider_only"`
 }
 
 const DefaultSimplifyPrompt = `You are an English text simplifier specialized in adapting literature for second-language learners.
@@ -125,5 +129,6 @@ func (s Settings) Public() map[string]any {
 		"tts_instruction":    s.TTSInstruction,
 		"simplify_reasoning": s.SimplifyReasoning,
 		"analyze_reasoning":  s.AnalyzeReasoning,
+		"provider_only":      s.ProviderOnly,
 	}
 }

@@ -29,12 +29,43 @@ type reasoningCfg struct {
 	Effort string `json:"effort,omitempty"`
 }
 
+type providerCfg struct {
+	Only           []string `json:"only,omitempty"`
+	AllowFallbacks *bool    `json:"allow_fallbacks,omitempty"`
+}
+
+// buildProvider parses a comma/space separated list of OpenRouter provider
+// slugs (e.g. "openai, anthropic") into a provider routing object that
+// whitelists exactly those providers. Returns nil when the list is empty
+// so the field is omitted and OpenRouter uses its default routing.
+func buildProvider(only string) *providerCfg {
+	only = strings.TrimSpace(only)
+	if only == "" {
+		return nil
+	}
+	parts := strings.FieldsFunc(only, func(r rune) bool {
+		return r == ',' || r == ' ' || r == '\n' || r == '\t'
+	})
+	slugs := make([]string, 0, len(parts))
+	for _, p := range parts {
+		p = strings.ToLower(strings.TrimSpace(p))
+		if p != "" {
+			slugs = append(slugs, p)
+		}
+	}
+	if len(slugs) == 0 {
+		return nil
+	}
+	return &providerCfg{Only: slugs}
+}
+
 type chatRequest struct {
 	Model          string         `json:"model"`
 	Messages       []chatMessage  `json:"messages"`
 	ResponseFormat map[string]any `json:"response_format,omitempty"`
 	Temperature    float64        `json:"temperature,omitempty"`
 	Reasoning      *reasoningCfg  `json:"reasoning,omitempty"`
+	Provider       *providerCfg   `json:"provider,omitempty"`
 	Stream         bool           `json:"stream"`
 }
 
@@ -64,6 +95,9 @@ func (c *ORClient) Chat(ctx context.Context, s Settings, model, prompt, effort s
 	if effort != "" {
 		body.Reasoning = &reasoningCfg{Effort: effort}
 	}
+	// provider whitelist applies to chat tasks only (simplify + analyze);
+	// TTS deliberately stays unrestricted.
+	body.Provider = buildProvider(s.ProviderOnly)
 	buf, _ := json.Marshal(body)
 	url := strings.TrimRight(s.BaseURL, "/") + "/chat/completions"
 	req, _ := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader(buf))
